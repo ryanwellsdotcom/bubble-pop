@@ -107,8 +107,8 @@ var BP = {
 
       /* 
       interactivity: 
-      positive numbers check for circles that are left or above the mouse. 
-      negative numbers check for circles that are right or below the mouse 
+      positive numbers check for bubbles that are left or above the mouse. 
+      negative numbers check for bubbles that are right or below the mouse 
       */
       if (BP.ui.mouse.x - this.x < this.radius
         && BP.ui.mouse.x - this.x > -this.radius
@@ -126,7 +126,7 @@ var BP = {
         BP.ui.mouse.y = 0;
       }
 
-      // redraw each time circle.update() is called
+      // redraw each time bubble.update() is called
       this.draw();
     },
       this.destroy = function () {
