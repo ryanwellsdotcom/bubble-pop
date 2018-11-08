@@ -12,10 +12,11 @@ var gulp = require('gulp'),
   distDir = 'dist/', // parent output directory
   distStylesDir = distDir + 'css/', // minified CSS output directory
   distScriptsDir = distDir + 'js/', // minified JavaScript output directory
-  distImagesDir = distDir + 'images/', // optimized images directory
 
   // include scss files to concatinate in desired order
-  vendorCssFiles = [],
+  vendorCssFiles = [
+    modulesDir + '/reset-css/sass/_reset.scss'
+  ],
   customCssFiles = [
     assetsStylesDir + 'main.scss' // this will include partials
   ],
