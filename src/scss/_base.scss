@@ -1,0 +1,68 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Sniglet', cursive;
+  color: hotpink;
+}
+
+header {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -40%);
+  z-index: 2;
+  text-align: center;
+}
+
+h1 {
+  font-size: 4rem;
+  color: hotpink;
+  text-shadow: -1px -1px 0 #c546c5, 1px -1px 0 #c546c5, -1px 1px 0 #c546c5, 1px 1px 0 #c546c5, 0 0 100px rgba(255, 255, 255, 1);
+}
+
+.start {
+  background: hotpink;
+  border: none;
+  padding: 8px 50px;
+  border-radius: 30px;
+  font-family: 'Sniglet', cursive;
+  font-size: 1.5rem;
+  color: #fff;
+  cursor: pointer;
+  text-shadow: 0 0 5px #c546c5;
+  box-shadow: 0 0 100px rgba(255, 255, 255, .3);
+}
+
+.score {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+  color: purple;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.levels {
+  display: none;
+}
+
+#canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  opacity: 0.5;
+  transition: opacity 0.5s;
+  &.active {
+    opacity: 1;
+    transition: opacity 1s;
+  }
+}
