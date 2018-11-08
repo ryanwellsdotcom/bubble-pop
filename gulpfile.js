@@ -66,7 +66,7 @@ gulp.task('vendor-scripts', ['clean:scripts'], function () {
 
 gulp.task('custom-scripts', ['vendor-scripts'], function () {
   return gulp.src(customScriptsFiles)
-    .pipe(plugins.sourcemaps.init())
+    //.pipe(plugins.sourcemaps.init())
     .pipe(plugins.stripDebug())
     .pipe(plugins.babel({
       presets: [
@@ -79,7 +79,7 @@ gulp.task('custom-scripts', ['vendor-scripts'], function () {
     }))
     //.pipe(plugins.ignore.exclude(["**/*.map"]))
     .pipe(plugins.uglify())
-    .pipe(plugins.sourcemaps.write('.'))
+    //.pipe(plugins.sourcemaps.write('.'))
     .pipe(gulp.dest(distScriptsDir))
     .pipe(reload({
       stream: true
