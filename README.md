@@ -1,5 +1,5 @@
 # Bubble Pop!
 
-A experimental game using HTML5 Canvas and JavaScript. 
+A simple game using HTML5 Canvas and JavaScript. Started with a bouncing ball tutorial and kept experimenting with it. Future iterations may include a scoring sytems and conclusion screen. 
 
 ### [Demo](http://ryanwells.com/bubble-pop)
