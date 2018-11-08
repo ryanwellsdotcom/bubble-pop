@@ -8,6 +8,7 @@ body {
   margin: 0;
   font-family: 'Sniglet', cursive;
   color: hotpink;
+  overflow: hidden;
 }
 
 header {
@@ -20,6 +21,8 @@ header {
 }
 
 h1 {
+  font-weight: 600;
+  margin: 45px 0;
   font-size: 4rem;
   color: hotpink;
   text-shadow: -1px -1px 0 #c546c5, 1px -1px 0 #c546c5, -1px 1px 0 #c546c5, 1px 1px 0 #c546c5, 0 0 100px rgba(255, 255, 255, 1);
@@ -28,14 +31,21 @@ h1 {
 .start {
   background: hotpink;
   border: none;
-  padding: 8px 50px;
+  padding: 6px 50px;
   border-radius: 30px;
   font-family: 'Sniglet', cursive;
   font-size: 1.5rem;
   color: #fff;
   cursor: pointer;
   text-shadow: 0 0 5px #c546c5;
+  border: 2px solid rgba(197, 70, 197, 0.3);
   box-shadow: 0 0 100px rgba(255, 255, 255, .3);
+  will-change: transform;
+  transition: transform 0.2s;
+  &:hover {
+    transform: scale(1.15);
+    transition: transform 0.15s;
+  }
 }
 
 .score {
