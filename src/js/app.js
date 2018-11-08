@@ -34,7 +34,7 @@ var BP = {
             opacity = 1;
           }
           elem.style.opacity = opacity;
-          elem.style.filter = 'alpha(opacity=' + opacity * 100 + ')';
+          elem.style.filter = `alpha(opacity=${opacity * 100})`;
         }, 50);
       }
       else {
@@ -57,7 +57,7 @@ var BP = {
             elem.style.visibility = 'hidden';
           }
           elem.style.opacity = opacity;
-          elem.style.filter = 'alpha(opacity=' + opacity * 100 + ')';
+          elem.style.filter = `alpha(opacity=${opacity * 100})`;
         }, 50);
       }
       else {
@@ -66,7 +66,14 @@ var BP = {
         elem.style.display = 'none';
         elem.style.visibility = 'hidden';
       }
-    }
+    },
+    randomColorGen: function () {
+      var r = Math.floor(Math.random() * 255) + 1;
+      var g = Math.floor(Math.random() * 255) + 1;
+      var b = Math.floor(Math.random() * 255) + 1;
+      var color = `${r}, ${g}, ${b}`;
+      return color;
+    },
   },
   bubblesQueue: [],
   bubble: function (x, y, dx, dy, radius, colors) {
@@ -90,23 +97,23 @@ var BP = {
 
       // boundry detection
       if (this.x + this.radius > innerWidth || this.x - this.radius < 0) {
-        this.dx = -this.dx;
+        this.dx = -this.dx; // move left
       }
       if (this.y + this.radius > innerHeight || this.y - this.radius < 0) {
-        this.dy = -this.dy;
+        this.dy = -this.dy; // move up
       }
-      this.x += this.dx;
-      this.y += this.dy;
+      this.x += this.dx; // move right
+      this.y += this.dy; // move down
 
       /* 
       interactivity: 
       positive numbers check for circles that are left or above the mouse. 
       negative numbers check for circles that are right or below the mouse 
       */
-      if (BP.ui.mouse.x - this.x < this.minRadius
-        && BP.ui.mouse.x - this.x > -this.minRadius
-        && BP.ui.mouse.y - this.y < this.minRadius
-        && BP.ui.mouse.y - this.y > -this.minRadius
+      if (BP.ui.mouse.x - this.x < this.radius
+        && BP.ui.mouse.x - this.x > -this.radius
+        && BP.ui.mouse.y - this.y < this.radius
+        && BP.ui.mouse.y - this.y > -this.radius
         && this.radius != 0) {
 
         this.radius += BP.gamePlay.bubbleExpansionRate; // enlarge bubble
@@ -115,6 +122,8 @@ var BP = {
         }
       } else if (this.radius > this.minRadius && this.radius != 0) {
         this.radius -= BP.gamePlay.bubbleExpansionRate; // shrink bubble
+        BP.ui.mouse.x = 0;
+        BP.ui.mouse.y = 0;
       }
 
       // redraw each time circle.update() is called
@@ -139,10 +148,10 @@ var BP = {
     // on resize make a prorated amount of bubbles each level based on current progress
     var bubbleNums = this.gamePlay.bubbleQnty - BP.gamePlay.bubblesPoppedPerLevel;
 
-    // random circles
+    // random bubbles
     for (var i = 0; i < bubbleNums; i++) {
 
-      // random circle size
+      // random bubble size
       var radius = Math.floor(Math.random() * BP.gamePlay.maxRadius) + 25;
 
       var x = Math.random() * (innerWidth - radius * 2) + radius;
@@ -150,25 +159,22 @@ var BP = {
       var dx = (Math.random() - 0.5) * BP.gamePlay.speed;
       var dy = (Math.random() - 0.5) * BP.gamePlay.speed;
 
-      // random RGB values
-      var r = Math.floor(Math.random() * 255) + 1;
-      var g = Math.floor(Math.random() * 255) + 1;
-      var b = Math.floor(Math.random() * 255) + 1;
+      // random opacity for each bubble
       var a = Math.random() * (1 - 0.1) + 0.1;
-      var colors = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+      var colors = `rgba(${BP.util.randomColorGen()} , ${a})`;
 
-      // instantiate new circles and store in array
+      // instantiate new bubbles and store in array
       this.bubblesQueue.push(new BP.bubble(x, y, dx, dy, radius, colors));
     }
   },
   animate: function () {
-    // animate circle
+    // animate bubble
     requestAnimationFrame(BP.animate); // recursive callback
 
     // clear last position
     BP.ui.ctx.clearRect(0, 0, innerWidth, innerHeight);
 
-    // call circle functions 
+    // call bubble functions 
     for (var i = 0; i < BP.bubblesQueue.length; i++) {
       BP.bubblesQueue[i].update();
     }
@@ -189,7 +195,8 @@ var BP = {
         // get mouse position
         BP.ui.mouse.x = event.x;
         BP.ui.mouse.y = event.y;
-      });
+      }, false);
+
       BP.gamePlay.speed = 3; // start off for level 1
       BP.gamePlay.bubbleQnty = 8; // start off for level 1
       BP.ui.canvas.setAttribute('class', 'active'); // increase opacity of canvas
@@ -206,12 +213,9 @@ var BP = {
     },
     showHideLevelMsg: function () {
       // random RGB values
-      var r = Math.floor(Math.random() * 255) + 1;
-      var g = Math.floor(Math.random() * 255) + 1;
-      var b = Math.floor(Math.random() * 255) + 1;
-      var color = 'color:rgba(' + r + ',' + g + ',' + b + ',1)';
+      var color = `color:rgba(${BP.util.randomColorGen()} , 1)`;
       BP.ui.levelMsg.setAttribute('style', color);
-      BP.ui.levelMsg.innerHTML = 'Level ' + BP.gamePlay.level;
+      BP.ui.levelMsg.innerHTML = `Level ${BP.gamePlay.level}`;
 
       var delayShowLevel = setTimeout(() => {
         clearTimeout(delayShowLevel);
@@ -266,5 +270,4 @@ var BP = {
     this.load(); // bind event handlers
   }
 };
-
 BP.init();
