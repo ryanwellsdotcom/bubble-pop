@@ -110,10 +110,10 @@ var BP = {
       positive numbers check for bubbles that are left or above the mouse. 
       negative numbers check for bubbles that are right or below the mouse 
       */
-      if (BP.ui.mouse.x - this.x < this.radius
-        && BP.ui.mouse.x - this.x > -this.radius
-        && BP.ui.mouse.y - this.y < this.radius
-        && BP.ui.mouse.y - this.y > -this.radius
+      if (BP.ui.mouse.x - this.x < this.minRadius
+        && BP.ui.mouse.x - this.x > -this.minRadius
+        && BP.ui.mouse.y - this.y < this.minRadius
+        && BP.ui.mouse.y - this.y > -this.minRadius
         && this.radius != 0) {
 
         this.radius += BP.gamePlay.bubbleExpansionRate; // enlarge bubble
