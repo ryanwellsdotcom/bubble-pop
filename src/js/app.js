@@ -1,5 +1,6 @@
 var BP = {
   ui: {
+    scoreElm: document.querySelector('.score'),
     introElm: document.querySelector('.intro'),
     levelsElm: document.querySelector('.levels'),
     levelMsg: document.querySelector('.levels').firstElementChild,
@@ -199,7 +200,7 @@ var BP = {
 
       BP.gamePlay.speed = 3; // start off for level 1
       BP.gamePlay.bubbleQnty = 8; // start off for level 1
-      BP.ui.canvas.setAttribute('class', 'active'); // increase opacity of canvas
+      BP.ui.canvas.classList.add('active'); // increase opacity of canvas
       BP.util.fadeOut(BP.ui.introElm, 200); // fade out intro
       BP.bubbleMultiplier(); // make bubbles
     },
@@ -207,7 +208,7 @@ var BP = {
       if (this.bubblesPoppedPerLevel === this.bubbleQnty) {
         this.bubblesPoppedPerLevel = 0; // reset counter
         BP.gamePlay.level += 1; // increment level
-        BP.ui.canvas.removeAttribute('class', 'active'); // reduce canvas opacity
+        BP.ui.canvas.classList.remove('active'); // reduce canvas opacity
         this.showHideLevelMsg();
       }
     },
@@ -244,12 +245,12 @@ var BP = {
         clearTimeout(delayShowNext);
 
         BP.bubbleMultiplier(); // make bubbles
-        BP.ui.canvas.setAttribute('class', 'active'); // increase canvas opacity
+        BP.ui.canvas.classList.add('active'); // increase canvas opacity
 
       }, 800);
     },
   },
-  load: function () {
+  bind: function () {
 
     // start game
     this.ui.startBtn.addEventListener('click', this.gamePlay.start);
@@ -267,7 +268,7 @@ var BP = {
     this.ui.size(); // set initial size 
     this.bubbleMultiplier(); // make bubbles
     this.animate(); // animate bubbles
-    this.load(); // bind event handlers
+    this.bind(); // bind event handlers
   }
 };
 BP.init();
