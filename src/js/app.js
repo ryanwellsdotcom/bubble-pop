@@ -1,4 +1,4 @@
-var BP = {
+const BP = {
   ui: {
     scoreElm: document.querySelector('.score'),
     introElm: document.querySelector('.intro'),
@@ -27,8 +27,8 @@ var BP = {
       elem.style.visibility = 'visible';
 
       if (ms) {
-        var opacity = 0;
-        var timer = setInterval(function () {
+        let opacity = 0;
+        const timer = setInterval(function () {
           opacity += 50 / ms;
           if (opacity >= 1) {
             clearInterval(timer);
@@ -48,8 +48,8 @@ var BP = {
         return;
 
       if (ms) {
-        var opacity = 1;
-        var timer = setInterval(function () {
+        let opacity = 1;
+        const timer = setInterval(function () {
           opacity -= 50 / ms;
           if (opacity <= 0) {
             clearInterval(timer);
@@ -69,10 +69,10 @@ var BP = {
       }
     },
     randomColorGen: function () {
-      var r = Math.floor(Math.random() * 255) + 1;
-      var g = Math.floor(Math.random() * 255) + 1;
-      var b = Math.floor(Math.random() * 255) + 1;
-      var color = `${r}, ${g}, ${b}`;
+      let r = Math.floor(Math.random() * 255) + 1;
+      let g = Math.floor(Math.random() * 255) + 1;
+      let b = Math.floor(Math.random() * 255) + 1;
+      let color = `${r}, ${g}, ${b}`;
       return color;
     },
   },
@@ -147,25 +147,27 @@ var BP = {
     this.bubblesQueue = [];
 
     // on resize make a prorated amount of bubbles each level based on current progress
-    var bubbleNums = this.gamePlay.bubbleQnty - BP.gamePlay.bubblesPoppedPerLevel;
+    let bubbleNums = this.gamePlay.bubbleQnty - BP.gamePlay.bubblesPoppedPerLevel;
 
     // random bubbles
-    for (var i = 0; i < bubbleNums; i++) {
+    for (let i = 0; i < bubbleNums; i++) {
 
       // random bubble size
-      var radius = Math.floor(Math.random() * BP.gamePlay.maxRadius) + 25;
+      let radius = Math.floor(Math.random() * BP.gamePlay.maxRadius) + 25;
 
-      var x = Math.random() * (innerWidth - radius * 2) + radius;
-      var y = Math.random() * (innerHeight - radius * 2) + radius;
-      var dx = (Math.random() - 0.5) * BP.gamePlay.speed;
-      var dy = (Math.random() - 0.5) * BP.gamePlay.speed;
+      let x = Math.random() * (innerWidth - radius * 2) + radius;
+      let y = Math.random() * (innerHeight - radius * 2) + radius;
+      let dx = (Math.random() - 0.5) * BP.gamePlay.speed;
+      let dy = (Math.random() - 0.5) * BP.gamePlay.speed;
 
       // random opacity for each bubble
-      var a = Math.random() * (1 - 0.1) + 0.1;
-      var colors = `rgba(${BP.util.randomColorGen()} , ${a})`;
+      let a = Math.random() * (1 - 0.1) + 0.1;
+      let colors = `rgba(${BP.util.randomColorGen()} , ${a})`;
+
+      const args = [x, y, dx, dy, radius, colors];
 
       // instantiate new bubbles and store in array
-      this.bubblesQueue.push(new BP.bubble(x, y, dx, dy, radius, colors));
+      this.bubblesQueue.push(new BP.bubble(...args));
     }
   },
   animate: function () {
@@ -176,7 +178,7 @@ var BP = {
     BP.ui.ctx.clearRect(0, 0, innerWidth, innerHeight);
 
     // call bubble functions 
-    for (var i = 0; i < BP.bubblesQueue.length; i++) {
+    for (let i = 0; i < BP.bubblesQueue.length; i++) {
       BP.bubblesQueue[i].update();
     }
   },
@@ -214,16 +216,16 @@ var BP = {
     },
     showHideLevelMsg: function () {
       // random RGB values
-      var color = `color:rgba(${BP.util.randomColorGen()} , 1)`;
+      let color = `color:rgba(${BP.util.randomColorGen()} , 1)`;
       BP.ui.levelMsg.setAttribute('style', color);
       BP.ui.levelMsg.innerHTML = `Level ${BP.gamePlay.level}`;
 
-      var delayShowLevel = setTimeout(() => {
+      const delayShowLevel = setTimeout(() => {
         clearTimeout(delayShowLevel);
 
         BP.util.fadeIn(BP.ui.levelsElm, 800); // fade in level message
 
-        var delayHideLevel = setTimeout(() => {
+        const delayHideLevel = setTimeout(() => {
           clearTimeout(delayHideLevel);
 
           // fade out level message and start next level 
@@ -241,7 +243,7 @@ var BP = {
         BP.gamePlay.maxExpansion -= 5; // reduce expansion size as game speeds up
       }
 
-      var delayShowNext = setTimeout(() => {
+      const delayShowNext = setTimeout(() => {
         clearTimeout(delayShowNext);
 
         BP.bubbleMultiplier(); // make bubbles
