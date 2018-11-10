@@ -18,6 +18,8 @@ header {
   transform: translate(-50%, -40%);
   z-index: 2;
   text-align: center;
+  display: flex;
+  flex-direction: column;
 }
 
 h1 {
@@ -26,6 +28,15 @@ h1 {
   font-size: 4rem;
   color: hotpink;
   text-shadow: -1px -1px 0 #c546c5, 1px -1px 0 #c546c5, -1px 1px 0 #c546c5, 1px 1px 0 #c546c5, 0 0 100px rgba(255, 255, 255, 1);
+}
+
+.intro {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -40%);
+  z-index: 2;
+  text-align: center;
 }
 
 .start {
@@ -43,19 +54,23 @@ h1 {
   will-change: transform;
   transition: transform 0.2s;
   &:hover {
-    transform: scale(1.15);
-    transition: transform 0.15s;
+    transform: scale(1.16);
+    transition: transform 0.2s;
   }
 }
 
-.score {
+.progress {
   position: absolute;
-  top: 10px;
   left: 50%;
-  transform: translateX(-50%);
-  font-size: 1.5rem;
+  top: 35%;
+  width: 100%;
+  transform: translate(-50%, -35%);
+  z-index: 2;
+  padding: 0 30px;
+  line-height: 1.35;
+  text-align: center;
+  font-size: 1.75rem;
   color: purple;
-  white-space: nowrap;
   opacity: 0;
   transition: opacity 0.5s;
   transition: transform 0.2s;
@@ -66,7 +81,18 @@ h1 {
 }
 
 .levels {
+  position: absolute;
+  left: 50%;
+  top: 47%;
+  width: 100%;
+  transform: translate(-50%, -47%);
+  padding: 0 30px;
+  text-align: center;
   display: none;
+  @media only screen and (max-width: 375px) {
+    top: 52%;
+    transform: translate(-50%, -52%);
+  }
 }
 
 #canvas {

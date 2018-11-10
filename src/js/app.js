@@ -1,6 +1,6 @@
 const BP = {
   ui: {
-    scoreElm: document.querySelector('.score'),
+    progressElm: document.querySelector('.progress'),
     introElm: document.querySelector('.intro'),
     levelsElm: document.querySelector('.levels'),
     levelMsg: document.querySelector('.levels').firstElementChild,
@@ -205,25 +205,75 @@ const BP = {
       BP.ui.canvas.classList.add('active'); // increase opacity of canvas
       BP.util.fadeOut(BP.ui.introElm, 200); // fade out intro
       BP.bubbleMultiplier(); // make bubbles
+      BP.gamePlay.stopwatch.startTimer();
+    },
+    stopwatch: {
+      startTime: null,
+      endTime: null,
+      duration: 0,
+      startTimer: function () {
+        this.startTime = new Date();
+        console.log('started');
+      },
+      stopTimer: function () {
+        this.endTime = new Date();
+      },
+      resetTimer: function () {
+        this.startTime = 0;
+        this.endTime = 0;
+        this.duration = 0;
+      },
+      showDuration: function () {
+        let time = (this.endTime.getTime() - this.startTime.getTime()) / 1000;
+        const secs = parseInt(time, 10);
+        let minutes = Math.floor(secs / 60);
+        let seconds = secs - minutes * 60;
+        let formatTime;
+        if (minutes > 0) {
+          formatTime = `${minutes}:${seconds}!`;
+        } else {
+          formatTime = `${seconds} seconds!`;
+        }
+        return formatTime;
+      }
     },
     checkProgress: function () {
       if (this.bubblesPoppedPerLevel === this.bubbleQnty) {
-        this.bubblesPoppedPerLevel = 0; // reset counter
+        BP.gamePlay.stopwatch.stopTimer();
         BP.gamePlay.level += 1; // increment level
         BP.ui.canvas.classList.remove('active'); // reduce canvas opacity
         this.showHideLevelMsg();
       }
     },
     showHideLevelMsg: function () {
+      BP.ui.progressElm.innerHTML = `${this.bubblesPoppedPerLevel} bubbles popped in ${BP.gamePlay.stopwatch.showDuration()}`;
+      this.bubblesPoppedPerLevel = 0; // reset counter
       // random RGB values
       let color = `color:rgba(${BP.util.randomColorGen()} , 1)`;
       BP.ui.levelMsg.setAttribute('style', color);
       BP.ui.levelMsg.innerHTML = `Level ${BP.gamePlay.level}`;
 
+      // popped bubble count and elapsed time message
+      const delayShowProgress = setTimeout(() => {
+        clearTimeout(delayShowProgress);
+
+        // fade in progress message 
+        BP.util.fadeIn(BP.ui.progressElm, 800);
+
+        const delayHideProgress = setTimeout(() => {
+          clearTimeout(delayHideProgress);
+
+          // fade out progress message while fading in level message
+          BP.util.fadeOut(BP.ui.progressElm, 600);
+        }, 4800);
+      }, 200);
+
+      // level number indicator 
       const delayShowLevel = setTimeout(() => {
         clearTimeout(delayShowLevel);
 
-        BP.util.fadeIn(BP.ui.levelsElm, 800); // fade in level message
+        // fade in level message
+        BP.util.fadeIn(BP.ui.levelsElm, 800);
 
         const delayHideLevel = setTimeout(() => {
           clearTimeout(delayHideLevel);
@@ -232,8 +282,8 @@ const BP = {
           BP.util.fadeOut(BP.ui.levelsElm, 600);
           this.nextLevel();
 
-        }, 4000);
-      }, 200);
+        }, 3000);
+      }, 2000);
     },
     nextLevel: function () {
       BP.gamePlay.speed += 0.5; // increase speed each level
