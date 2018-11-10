@@ -161,7 +161,7 @@ const BP = {
       let dy = (Math.random() - 0.5) * BP.gamePlay.speed;
 
       // random opacity for each bubble
-      let a = Math.random() * (1 - 0.1) + 0.1;
+      let a = Math.random() * (1 - 0.15) + 0.15;
       let colors = `rgba(${BP.util.randomColorGen()} , ${a})`;
 
       const args = [x, y, dx, dy, radius, colors];
