@@ -79,7 +79,7 @@ gulp.task('custom-scripts', ['vendor-scripts'], function () {
     }))
     //.pipe(plugins.ignore.exclude(["**/*.map"]))
     .pipe(plugins.uglify())
-    //.pipe(plugins.sourcemaps.write('.'))
+    //.pipe(plugins.sourcemaps.write('.')) 
     .pipe(gulp.dest(distScriptsDir))
     .pipe(reload({
       stream: true

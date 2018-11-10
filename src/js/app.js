@@ -219,8 +219,8 @@ const BP = {
         this.endTime = new Date();
       },
       resetTimer: function () {
-        this.startTime = 0;
-        this.endTime = 0;
+        this.startTime = null;
+        this.endTime = null;
         this.duration = 0;
       },
       showDuration: function () {
@@ -248,6 +248,8 @@ const BP = {
     showHideLevelMsg: function () {
       BP.ui.progressElm.innerHTML = `${this.bubblesPoppedPerLevel} bubbles popped in ${BP.gamePlay.stopwatch.showDuration()}`;
       this.bubblesPoppedPerLevel = 0; // reset counter
+      BP.gamePlay.stopwatch.resetTimer();
+
       // random RGB values
       let color = `color:rgba(${BP.util.randomColorGen()} , 1)`;
       BP.ui.levelMsg.setAttribute('style', color);
@@ -298,7 +300,7 @@ const BP = {
 
         BP.bubbleMultiplier(); // make bubbles
         BP.ui.canvas.classList.add('active'); // increase canvas opacity
-
+        BP.gamePlay.stopwatch.startTimer();
       }, 800);
     },
   },
