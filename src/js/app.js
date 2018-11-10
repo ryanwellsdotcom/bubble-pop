@@ -230,7 +230,8 @@ const BP = {
         let seconds = secs - minutes * 60;
         let formatTime;
         if (minutes > 0) {
-          formatTime = `${minutes}:${seconds}!`;
+          let onesPlace = seconds < 10 ? '0' : '';
+          formatTime = `${minutes}:${onesPlace}${seconds}!`;
         } else {
           formatTime = `${seconds} seconds!`;
         }
