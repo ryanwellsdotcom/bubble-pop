@@ -178,9 +178,9 @@ const BP = {
     BP.ui.ctx.clearRect(0, 0, innerWidth, innerHeight);
 
     // call bubble functions 
-    for (let i = 0; i < BP.bubblesQueue.length; i++) {
+    BP.bubblesQueue.forEach(function (item, i) {
       BP.bubblesQueue[i].update();
-    }
+    });
   },
   gamePlay: {
     level: 1,
@@ -213,7 +213,6 @@ const BP = {
       duration: 0,
       startTimer: function () {
         this.startTime = new Date();
-        console.log('started');
       },
       stopTimer: function () {
         this.endTime = new Date();
