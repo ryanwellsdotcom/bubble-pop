@@ -77,7 +77,7 @@ const BP = {
     },
   },
   bubblesQueue: [],
-  bubble: function (x, y, dx, dy, radius, colors) {
+  bubble: function (x, y, dx, dy, radius, colors, sound) {
     this.x = x;
     this.y = y;
     this.dx = dx;
@@ -85,6 +85,8 @@ const BP = {
     this.radius = radius;
     this.minRadius = radius;
     this.colors = colors;
+    this.sound = sound;
+    this.sound.volume = 0.25;
 
     this.draw = function () {
       BP.ui.ctx.beginPath();
@@ -131,6 +133,7 @@ const BP = {
       this.draw();
     },
       this.destroy = function () {
+        this.sound.play();
         this.radius = 0;
         this.x = -10;
         this.y = -10;
@@ -155,6 +158,16 @@ const BP = {
       // random bubble size
       let radius = Math.floor(Math.random() * BP.gamePlay.maxRadius) + 25;
 
+      //sound type
+      let sound;
+      if (radius <= 34) {
+        sound = new Audio('//ryanwells.com/bubble-pop/dist/audio/bubble-pop-high.mp3');
+      } else if (radius > 34 && radius <= 42) {
+        sound = new Audio('//ryanwells.com/bubble-pop/dist/audio/bubble-pop-med.mp3');
+      } else {
+        sound = new Audio('//ryanwells.com/bubble-pop/dist/audio/bubble-pop-low.mp3');
+      }
+
       let x = Math.random() * (innerWidth - radius * 2) + radius;
       let y = Math.random() * (innerHeight - radius * 2) + radius;
       let dx = (Math.random() - 0.5) * BP.gamePlay.speed;
@@ -164,7 +177,7 @@ const BP = {
       let a = Math.random() * (1 - 0.15) + 0.15;
       let colors = `rgba(${BP.util.randomColorGen()} , ${a})`;
 
-      const args = [x, y, dx, dy, radius, colors];
+      const args = [x, y, dx, dy, radius, colors, sound];
 
       // instantiate new bubbles and store in array
       this.bubblesQueue.push(new BP.bubble(...args));
@@ -183,7 +196,7 @@ const BP = {
     });
   },
   gamePlay: {
-    level: 1,
+    level: 0,
     bubbleQnty: 50, // 50 to start as example
     bubblesPoppedPerLevel: 0,
     bubblesPoppedTotal: 0,
@@ -192,7 +205,7 @@ const BP = {
     maxRadius: 45,
     maxExpansion: 150,
     start: function () {
-
+      BP.gamePlay.level = 0;
       // track mouse
       BP.ui.canvas.addEventListener('mousemove', function (event) {
         // get mouse position
@@ -313,7 +326,7 @@ const BP = {
     window.addEventListener('resize', function () {
       BP.ui.canvas.width = window.innerWidth;
       BP.ui.canvas.height = window.innerHeight;
-      if (BP.gamePlay.bubblesPoppedPerLevel != 0) {
+      if (BP.gamePlay.bubblesPoppedPerLevel != 0 || BP.gamePlay.level === 0) {
         BP.bubbleMultiplier();
       }
     });
