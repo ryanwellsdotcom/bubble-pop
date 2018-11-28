@@ -6,9 +6,23 @@ const BP = {
     levelMsg: document.querySelector('.levels').firstElementChild,
     startBtn: document.querySelector('.start'),
     canvas: document.getElementById('canvas'),
+    canvasWrapper: document.getElementById('canvas-wrapper'),
     size: function () {
       this.canvas.width = window.innerWidth;
       this.canvas.height = window.innerHeight;
+    },
+    loadSounds: function () {
+      //sound type
+      const sounds = {
+        high: new Audio('//ryanwells.com/bubble-pop/dist/audio/bubble-pop-high.mp3'),
+        med: new Audio('//ryanwells.com/bubble-pop/dist/audio/bubble-pop-med.mp3'),
+        low: new Audio('//ryanwells.com/bubble-pop/dist/audio/bubble-pop-low.mp3')
+      };
+      // set volume for each sound
+      Object.values(sounds).forEach((sound) => {
+        sound.volume = 0.25;
+      });
+      return sounds;
     },
     ctx: document.getElementById('canvas').getContext('2d'),
     mouse: {
@@ -82,11 +96,10 @@ const BP = {
     this.y = y;
     this.dx = dx;
     this.dy = dy;
+    this.origRadius = radius;
     this.radius = radius;
     this.minRadius = radius;
     this.colors = colors;
-    this.sound = sound;
-    this.sound.volume = 0.25;
 
     this.draw = function () {
       BP.ui.ctx.beginPath();
@@ -113,15 +126,15 @@ const BP = {
       positive numbers check for bubbles that are left or above the mouse. 
       negative numbers check for bubbles that are right or below the mouse 
       */
-      if (BP.ui.mouse.x - this.x < this.minRadius
-        && BP.ui.mouse.x - this.x > -this.minRadius
-        && BP.ui.mouse.y - this.y < this.minRadius
-        && BP.ui.mouse.y - this.y > -this.minRadius
+      if (BP.ui.mouse.x - this.x < this.radius
+        && BP.ui.mouse.x - this.x > -this.radius
+        && BP.ui.mouse.y - this.y < this.radius
+        && BP.ui.mouse.y - this.y > -this.radius
         && this.radius != 0) {
 
         this.radius += BP.gamePlay.bubbleExpansionRate; // enlarge bubble
         if (this.radius > BP.gamePlay.maxExpansion) {
-          this.destroy();
+          this.destroy(this.origRadius);
         }
       } else if (this.radius > this.minRadius && this.radius != 0) {
         this.radius -= BP.gamePlay.bubbleExpansionRate; // shrink bubble
@@ -132,8 +145,8 @@ const BP = {
       // redraw each time bubble.update() is called
       this.draw();
     },
-      this.destroy = function () {
-        this.sound.play();
+      this.destroy = function (origRadius) {
+        BP.gamePlay.playSound(origRadius);
         this.radius = 0;
         this.x = -10;
         this.y = -10;
@@ -157,17 +170,6 @@ const BP = {
 
       // random bubble size
       let radius = Math.floor(Math.random() * BP.gamePlay.maxRadius) + 25;
-
-      //sound type
-      let sound;
-      if (radius <= 34) {
-        sound = new Audio('//ryanwells.com/bubble-pop/dist/audio/bubble-pop-high.mp3');
-      } else if (radius > 34 && radius <= 42) {
-        sound = new Audio('//ryanwells.com/bubble-pop/dist/audio/bubble-pop-med.mp3');
-      } else {
-        sound = new Audio('//ryanwells.com/bubble-pop/dist/audio/bubble-pop-low.mp3');
-      }
-
       let x = Math.random() * (innerWidth - radius * 2) + radius;
       let y = Math.random() * (innerHeight - radius * 2) + radius;
       let dx = (Math.random() - 0.5) * BP.gamePlay.speed;
@@ -177,7 +179,7 @@ const BP = {
       let a = Math.random() * (1 - 0.15) + 0.15;
       let colors = `rgba(${BP.util.randomColorGen()} , ${a})`;
 
-      const args = [x, y, dx, dy, radius, colors, sound];
+      const args = [x, y, dx, dy, radius, colors];
 
       // instantiate new bubbles and store in array
       this.bubblesQueue.push(new BP.bubble(...args));
@@ -204,13 +206,25 @@ const BP = {
     speed: 8,
     maxRadius: 45,
     maxExpansion: 150,
+    setMouseCoords: function (event) {
+      BP.ui.mouse.x = event.x;
+      BP.ui.mouse.y = event.y;
+    },
     start: function () {
-      BP.gamePlay.level = 0;
+      BP.gamePlay.level = 1;
       // track mouse
-      BP.ui.canvas.addEventListener('mousemove', function (event) {
+      BP.ui.canvasWrapper.addEventListener('mousemove', function (event) {
         // get mouse position
-        BP.ui.mouse.x = event.x;
-        BP.ui.mouse.y = event.y;
+        event.preventDefault();
+        event.stopPropagation();
+        BP.gamePlay.setMouseCoords(event);
+      }, false);
+
+      BP.ui.canvasWrapper.addEventListener('click', function (event) {
+        // get mouse position
+        event.preventDefault();
+        event.stopPropagation();
+        BP.gamePlay.setMouseCoords(event);
       }, false);
 
       BP.gamePlay.speed = 3; // start off for level 1
@@ -219,6 +233,7 @@ const BP = {
       BP.util.fadeOut(BP.ui.introElm, 200); // fade out intro
       BP.bubbleMultiplier(); // make bubbles
       BP.gamePlay.stopwatch.startTimer();
+
     },
     stopwatch: {
       startTime: null,
@@ -316,6 +331,17 @@ const BP = {
         BP.gamePlay.stopwatch.startTimer();
       }, 800);
     },
+    playSound: function (origRadius) {
+      this.sound = null;
+      if (origRadius <= 34) {
+        this.sound = BP.ui.loadSounds().high;
+      } else if (origRadius > 34 && origRadius <= 42) {
+        this.sound = BP.ui.loadSounds().med;
+      } else {
+        this.sound = BP.ui.loadSounds().low;
+      }
+      this.sound.play();
+    }
   },
   bind: function () {
 
@@ -333,9 +359,10 @@ const BP = {
   },
   init: function () {
     this.ui.size(); // set initial size 
-    this.bubbleMultiplier(); // make bubbles
-    this.animate(); // animate bubbles
+    this.ui.loadSounds();
+    this.bubbleMultiplier(); // make initial bubbles on load
+    this.animate(); // move bubbles around screen
     this.bind(); // bind event handlers
   }
 };
-BP.init();
+BP.init(); 
