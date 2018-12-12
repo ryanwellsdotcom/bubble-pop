@@ -91,7 +91,7 @@ const BP = {
     },
   },
   bubblesQueue: [],
-  bubble: function (x, y, dx, dy, radius, colors, sound) {
+  bubble: function (x, y, dx, dy, radius, colors) {
     this.x = x;
     this.y = y;
     this.dx = dx;
